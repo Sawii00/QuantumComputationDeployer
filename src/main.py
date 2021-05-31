@@ -71,7 +71,10 @@ if __name__ == "__main__":
 
 # TODO(sawii)
 '''
-- implement remote measure when decided the strategy for classical registers
+- check ebits are not already entangled with others at this point
+- add yaml notation for multiple ebits in coupling map
+
+
 
 ##TO BE TALKED ABOUT IN THE THESIS REGARDLESS
 - Remotely controlled operations

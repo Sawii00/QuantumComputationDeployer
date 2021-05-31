@@ -215,6 +215,9 @@ class ExecutionProtocol(ns.protocols.NodeProtocol):
             if not found:
                 raise Exception("Cannot execute entanglement between uncoupled ebits")
 
+
+            #TODO: check ebits are not already entangled with others at this point
+
             if self.is_local_qubit(q0):
                 # We identify its endpoint within the quantum communication channel
                 if list(quantum_connection.ports.values())[0].connected_port.component is node0:
