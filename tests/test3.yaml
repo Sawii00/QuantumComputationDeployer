@@ -1,0 +1,45 @@
+network: main_network
+
+ebit_coupling_map:
+  entries:
+    - alice[2], bob[2]
+    - alice[3], bob[3]
+
+components:
+  alice:
+    type: quantum_node
+    properties:
+      n_of_qubits: 4
+      ebits:
+        - 2
+        - 3
+      topology:
+        - 0,1
+        - 1,0
+        - 0,2
+        - 2,0
+        - 1,3
+        - 3,1
+
+  bob:
+    type: quantum_node
+    properties:
+      n_of_qubits: 4
+      ebits:
+        - 2
+        - 3
+      topology:
+        - 0,1
+        - 1,0
+        - 3,1
+        - 1,3
+        - 0,2
+        - 2,0
+
+  quantum_connection_bob_alice:
+    type: quantum_connection
+    properties:
+      length: 20
+    connect_to:
+      node1: alice
+      node2: bob
