@@ -1,4 +1,4 @@
-from simulation import *
+from src.simulation import *
 import netsquid as ns
 import qiskit as qs
 from netsquid_netconf.builder import ComponentBuilder
@@ -62,7 +62,7 @@ def main():
 
     print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0],
                                          network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0]]))
-'''
+    '''
 
 
 if __name__ == "__main__":
