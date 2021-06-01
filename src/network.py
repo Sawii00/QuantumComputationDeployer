@@ -158,7 +158,7 @@ class NetworkWrapper:
         Returns: node owner of the qubit or None otherwise
         """
         for name, node in self.network.nodes.items():
-            if name in q.register.name:
+            if name in q._register.name:
                 return node
         return None
 

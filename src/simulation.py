@@ -61,7 +61,7 @@ class ExecutionProtocol(NodeProtocol):
         Returns: True if bit is local, False otherwise
 
         """
-        return self.node.name in bit.register.name
+        return self.node.name in bit._register.name
 
     def get_local_qubit_index(self, qubit: Qubit):
         """
@@ -74,8 +74,8 @@ class ExecutionProtocol(NodeProtocol):
         Returns: qubit's position inside local register or None if it is not there
 
         """
-        if self.node.name in qubit.register.name:
-            return qubit.index
+        if self.node.name in qubit._register.name:
+            return qubit._index
         return None
 
     def get_local_qubit_indices(self, qubit_list: list):
@@ -160,10 +160,10 @@ class ExecutionProtocol(NodeProtocol):
             self.network.entangled_qubits.pop(ent_index)
 
             INSTR_CX(self.node.subcomponents["main_memory"],
-                     positions=[q0.index, ent0.index])
+                     positions=[q0._index, ent0._index])
 
             meas = INSTR_MEASURE(self.node.subcomponents["main_memory"],
-                                 positions=[ent0.index])
+                                 positions=[ent0._index])
             # The control outputs the result of the measurement through its port
             port0.tx_output(meas[0])
             # Waiting for the measurement of the target
@@ -172,7 +172,7 @@ class ExecutionProtocol(NodeProtocol):
             val = mex.items[0]
             if val == 1:
                 INSTR_Z(self.node.subcomponents["main_memory"],
-                        positions=[q0.index])
+                        positions=[q0._index])
             # To synchronize the execution of these complex gates an Acknowledgment Protocol is employed.
             # The header has the purpose of allowing the selective extraction of the ack even if multiple messages are
             # ready to be read from the input queue.
@@ -186,18 +186,18 @@ class ExecutionProtocol(NodeProtocol):
                 port1 = list(connection.ports.values())[1].connected_port
 
             INSTR_CX(self.node.subcomponents["main_memory"],
-                     positions=[ent1.index, q1.index])
+                     positions=[ent1._index, q1._index])
             INSTR_H(self.node.subcomponents["main_memory"],
-                    positions=[ent1.index])
+                    positions=[ent1._index])
             # Waits for the control's measurement
             yield self.await_port_input(port1)
             mex = port1.rx_input()
             val = mex.items[0]
             if val == 1:
                 INSTR_X(self.node.subcomponents["main_memory"],
-                        positions=[q1.index])
+                        positions=[q1._index])
             meas = INSTR_MEASURE(self.node.subcomponents["main_memory"],
-                                 positions=[ent1.index])
+                                 positions=[ent1._index])
             # Sends its measurement to the target
             port1.tx_output(meas[0])
             # Waits for the acknowledgement from the target before proceeding
@@ -230,8 +230,8 @@ class ExecutionProtocol(NodeProtocol):
             ent_q1, ent_q2 = create_qubits(2)
             operate(ent_q1, H)
             operate([ent_q1, ent_q2], CNOT)
-            self.node.subcomponents["main_memory"].put(ent_q1, q0.index)
-            self.node.subcomponents["main_memory"].put(ent_q2, q1.index)
+            self.node.subcomponents["main_memory"].put(ent_q1, q0._index)
+            self.node.subcomponents["main_memory"].put(ent_q2, q1._index)
         else:
             # We retrieve the quantum connection between the QPUs
             quantum_connection = self.network.get_quantum_connection_between_nodes(node0, node1)
@@ -245,10 +245,10 @@ class ExecutionProtocol(NodeProtocol):
             # Checks the ebits are coupled before allowing the entanglement
             found = False
             for entry in self.coupling_map:
-                if (node0.name == entry[0].name and q0.index == entry[0].index) or \
-                        (node0.name == entry[1].name and q0.index == entry[1].index):
-                    if (node1.name == entry[0].name and q1.index == entry[0].index) or \
-                            (node1.name == entry[1].name and q1.index == entry[1].index):
+                if (node0.name == entry[0].name and q0._index == entry[0].index) or \
+                        (node0.name == entry[1].name and q0._index == entry[1].index):
+                    if (node1.name == entry[0].name and q1._index == entry[0].index) or \
+                            (node1.name == entry[1].name and q1._index == entry[1].index):
                         found = True
 
             if not found:
@@ -273,7 +273,7 @@ class ExecutionProtocol(NodeProtocol):
                 ent_q0, ent_q1 = create_qubits(2)
                 operate(ent_q0, H)
                 operate([ent_q0, ent_q1], CNOT)
-                self.node.subcomponents["main_memory"].put(ent_q0, q0.index)
+                self.node.subcomponents["main_memory"].put(ent_q0, q0._index)
                 # Saves in the global list of entangled pairs the current ones
                 self.network.entangled_qubits.append([q0, q1])
                 port0.tx_output(ent_q1)
@@ -301,7 +301,7 @@ class ExecutionProtocol(NodeProtocol):
                 yield self.await_port_input(port1)
                 mex = port1.rx_input()
                 ent_q1 = mex.items[0]
-                self.node.subcomponents["main_memory"].put(ent_q1, q1.index)
+                self.node.subcomponents["main_memory"].put(ent_q1, q1._index)
                 # Sends acknowledgement
                 port1_c.tx_output(Message("ACK_ENT", header="ENT"))
 
@@ -336,8 +336,8 @@ class ExecutionProtocol(NodeProtocol):
 
         """
         res = INSTR_MEASURE(self.node.subcomponents["main_memory"],
-                            positions=[qubit.index])
-        self.node.classical_register[cbit.index] = res
+                            positions=[qubit._index])
+        self.node.classical_register[cbit._index] = res
         print(f"{self.node.name} measured: {res}")
 
     def local_cx(self, control: Qubit, target: Qubit):
@@ -351,7 +351,7 @@ class ExecutionProtocol(NodeProtocol):
         """
         if control == target:
             raise Exception("CNOT is a two qubit gate... cannot execute on a single qubit")
-        if self.node.topology is None or (control.index, target.index) in self.node.topology:
+        if self.node.topology is None or (control._index, target._index) in self.node.topology:
             INSTR_CNOT(self.node.subcomponents["main_memory"],
                        positions=self.get_local_qubit_indices([control, target]))
         else:
@@ -492,12 +492,12 @@ class Simulation:
             if not found:
                 raise Exception(f"Register: {reg.name} does not match with any node")
 
-    def __setup_classical_connections(self, CHANNEL_LENGTH: int = 20):
+    def __setup_classical_connections(self, channel_length: int = 20):
         """
         A classical connection is automatically setup between each node of the network.
 
         Args:
-            CHANNEL_LENGTH: length of the classical channel
+            channel_length: length of the classical channel
 
         """
         node_list = list(self.network.network.nodes.values())
@@ -506,7 +506,7 @@ class Simulation:
                 self.network.network.add_connection(node_list[i], node_list[j],
                                                     ClassicalDirectConnection(
                                                         f"c_conn_{node_list[i].name}_{node_list[j].name}",
-                                                        CHANNEL_LENGTH), label=f"classical_{i}_{j}")
+                                                        channel_length), label=f"classical_{i}_{j}")
 
     def __check_coupling_map(self):
         """

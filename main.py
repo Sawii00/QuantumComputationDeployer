@@ -3,8 +3,6 @@ import netsquid as ns
 import qiskit as qs
 from netsquid_netconf.builder import ComponentBuilder
 from netsquid_netconf.netconf import netconf_generator
-import warnings
-warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 
 def main():
@@ -55,14 +53,14 @@ def main():
     '''
 
 
-    '''         TEST3
+    '''         TEST3 '''
     print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
                                          network.network.nodes["alice"].subcomponents["main_memory"].peek(1)[0]]))
     print()
 
     print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0],
                                          network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0]]))
-    '''
+
 
 
 if __name__ == "__main__":
