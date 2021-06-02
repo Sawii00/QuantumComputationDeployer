@@ -2,8 +2,7 @@ network: main_network
 
 ebit_coupling_map:
   entries:
-    - alice[2], bob[2]
-    - bob[3], alice[3]
+    - alice[2,3] <-> bob[2,3]
 
 components:
   alice:
