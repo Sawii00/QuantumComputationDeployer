@@ -35,16 +35,24 @@ class EbitCouplingMapBuilder(Builder):
         entries = config_dict["entries"]
         coupling_map = []
         for e in entries:
-            qubits = e.split(",")
+            qubits = e.split("<->")
             if len(qubits) != 2:
                 raise Exception("Error in defining the coupling map")
             try:
                 first_node = re.search('(.+?)\[', qubits[0]).group(1).strip()
-                first_index = re.search('\[(.+?)\]', qubits[0]).group(1).strip()
+                first_indices = re.search('\[(.+?)\]', qubits[0]).group(1).strip()
                 second_node = re.search('(.+?)\[', qubits[1]).group(1).strip()
-                second_index = re.search('\[(.+?)\]', qubits[1]).group(1).strip()
-                coupling_map.append((CouplingMapQubit(first_node, int(first_index)),
-                                     CouplingMapQubit(second_node, int(second_index))))
+                second_indices = re.search('\[(.+?)\]', qubits[1]).group(1).strip()
+                for e1 in first_indices.strip().split(","):
+                    for e2 in second_indices.strip().split(","):
+                        found = False
+                        pair = (CouplingMapQubit(first_node, int(e1.strip())), CouplingMapQubit(second_node, int(e2.strip())))
+                        for t in coupling_map:
+                            if t == pair or t == (pair[1], pair[0]):
+                                found = True
+                                break
+                        if not found:
+                            coupling_map.append(pair)
             except AttributeError:
                 raise Exception("Invalid syntax in coupling map")
         return coupling_map

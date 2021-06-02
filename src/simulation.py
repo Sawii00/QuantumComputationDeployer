@@ -208,8 +208,9 @@ class ExecutionProtocol(NodeProtocol):
         else:
             raise Exception("Invalid parameters in Remote CNOT gate")
 
+    # AT SOURCE github.com/Wojtek242/draft-irtf-qirg-principles/blob/master/draft-irtf-qirg-principles-07.txt (line 672)
     def entangle_qubits(self, q0: Qubit,
-                        q1: Qubit):  # AT SOURCE https://github.com/Wojtek242/draft-irtf-qirg-principles/blob/master/draft-irtf-qirg-principles-07.txt (line 672)
+                        q1: Qubit):
         """
         Allows for local as well as "AT SOURCE" entanglement of two qubits:
         - If the two qubits are local to this Node, they are entangled.
@@ -218,7 +219,6 @@ class ExecutionProtocol(NodeProtocol):
         Args:
             q0: first qubit to be entangled
             q1: second qubit to be entangled
-
         """
         if q0 == q1:
             raise Exception("Cannot entangle a qubit with itself")
@@ -254,9 +254,12 @@ class ExecutionProtocol(NodeProtocol):
             if not found:
                 raise Exception("Cannot execute entanglement between uncoupled ebits")
 
-            # TODO: check ebits are not already entangled with others at this point
-
             if self.is_local_qubit(q0):
+                # The entanglement generator asserts the ebits have not already been entangled with other ebits
+                for entangled_pair in self.network.entangled_qubits:
+                    if q0 in entangled_pair or q1 in entangled_pair:
+                        raise Exception("One of the ebits is already entangled with another one")
+
                 # We identify its endpoint within the quantum communication channel
                 if list(quantum_connection.ports.values())[0].connected_port.component is node0:
                     port0 = list(quantum_connection.ports.values())[0].connected_port
@@ -514,7 +517,6 @@ class Simulation:
         Requirements:
         - Specified nodes must exist
         - Specified qubits must be defined as an Ebit of the specified node
-        - An Ebit cannot be coupled with more than one other Ebit
         """
         for entry in self.network.coupling_map:
             for operand in entry:
@@ -524,9 +526,8 @@ class Simulation:
                     raise Exception(f"Invalid node {operand.name} defined in the coupling map")
                 found = False
                 for ebit in node0.ebits:
-                    if operand.index == ebit.index:  # and not ebit.paired:
+                    if operand.index == ebit.index:
                         found = True
-                        ebit.paired = True
                         break
                 if not found:
                     raise Exception("Invalid coupling map defined")

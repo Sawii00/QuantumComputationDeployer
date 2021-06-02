@@ -52,7 +52,6 @@ def main():
     print((network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0].qstate.qrepr.ket))
     '''
 
-
     '''         TEST3 '''
     print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
                                          network.network.nodes["alice"].subcomponents["main_memory"].peek(1)[0]]))
@@ -62,10 +61,8 @@ def main():
                                          network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0]]))
 
 
-
 if __name__ == "__main__":
     main()
-
 
 # TODO(sawii)
 '''
@@ -73,14 +70,12 @@ if __name__ == "__main__":
 - add yaml notation for multiple ebits in coupling map
 
 
-
 ##TO BE TALKED ABOUT IN THE THESIS REGARDLESS
 - Remotely controlled operations
-- Entanglement Swapping with application in parallel of entanglement swap with between nodes
+- Entanglement Swapping 
     
 #IN THE FUTURE
 - implement all instructions also with custom parameters
 - make channels more flexible to allow specification of loss and delay from yaml
 - support multiple qubits instruction from qasm (X q[0,2,3])
 '''
-
