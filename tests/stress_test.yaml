@@ -2,43 +2,51 @@ network: main_network
 
 ebit_coupling_map:
   entries:
-    - alice[2] <-> bob[2]
-    - alice[2] <-> charlie[1]
+    - qpu1[1] <-> qpu2[1]
+    - qpu3[1] <-> qpu4[1]
 
 components:
-  alice:
-    type: quantum_node
-    properties:
-      n_of_qubits: 3
-      ebits:
-        - 2
-
-  bob:
-    type: quantum_node
-    properties:
-      n_of_qubits: 3
-      ebits:
-        - 2
-
-  charlie:
+  qpu1:
     type: quantum_node
     properties:
       n_of_qubits: 2
       ebits:
         - 1
 
-  quantum_connection_bob_alice:
-    type: quantum_connection
+  qpu2:
+    type: quantum_node
     properties:
-      length: 20
-    connect_to:
-      node1: alice
-      node2: bob
+      n_of_qubits: 2
+      ebits:
+        - 1
 
-  quantum_connection_alice_charlie:
+  qpu3:
+    type: quantum_node
+    properties:
+      n_of_qubits: 2
+      ebits:
+        - 1
+
+  qpu4:
+    type: quantum_node
+    properties:
+      n_of_qubits: 2
+      ebits:
+        - 1
+
+  quantum_connection1_2:
     type: quantum_connection
     properties:
       length: 20
     connect_to:
-      node1: alice
-      node2: charlie
+      node1: qpu1
+      node2: qpu2
+
+
+  quantum_connection3_4:
+    type: quantum_connection
+    properties:
+      length: 20
+    connect_to:
+      node1: qpu3
+      node2: qpu4
