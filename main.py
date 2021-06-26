@@ -10,13 +10,13 @@ def main():
     code = input("Insert QASM file: ")
 
     if conf == "":
-        conf = "../tests/test3.yaml"
+        conf = "tests/test3.yaml"
 
     if code == "":
-        code = "../tests/test3.qasm"
+        code = "tests/test3.qasm"
 
     # In order for the component builder to recognize our custom classes, we must add them to its dictionary.
-    ComponentBuilder.add_type("classical_connection", ClassicalDirectConnection)
+    #ComponentBuilder.add_type("classical_connection", ClassicalDirectConnection)
     ComponentBuilder.add_type("quantum_connection", QuantumDirectConnection)
     ComponentBuilder.add_type("quantum_node", QuantumNode)
     # Invokes the network generator which takes nodes and connections and sets them up within a network object.
@@ -34,31 +34,35 @@ def main():
     simulation = Simulation(network, quantum_circuit)
     simulation.start()
 
-    '''
+
     #    TEST1
-    print(ns.qubits.qubitapi.reduced_dm([network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
-                                        network.nodes["bob"].subcomponents["main_memory"].peek(0)[0]]))
-    '''
-    '''
+    if "test1" in conf:
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
+                                            network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0]]))
     #     TEST2
+    if "test2" in conf:
 
-    (ns.qubits.qubitapi.combine_qubits([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
-                                         network.network.nodes["alice"].subcomponents["main_memory"].peek(1)[0],
-                                         network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0],
-                                         network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0],
-                                         network.network.nodes["charlie"].subcomponents["main_memory"].peek(0)[0]]))
+        (ns.qubits.qubitapi.combine_qubits([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
+                                             network.network.nodes["alice"].subcomponents["main_memory"].peek(1)[0],
+                                             network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0],
+                                             network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0],
+                                             network.network.nodes["charlie"].subcomponents["main_memory"].peek(0)[0]]))
 
+        print(network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0].qstate.qrepr.ket)
 
-    print((network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0].qstate.qrepr.ket))
-    '''
+    if "test3" in conf:
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
+                                             network.network.nodes["alice"].subcomponents["main_memory"].peek(1)[0]]))
+        print()
 
-    '''         TEST3 '''
-    print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["alice"].subcomponents["main_memory"].peek(0)[0],
-                                         network.network.nodes["alice"].subcomponents["main_memory"].peek(1)[0]]))
-    print()
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0],
+                                             network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0]]))
 
-    print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["bob"].subcomponents["main_memory"].peek(0)[0],
-                                         network.network.nodes["bob"].subcomponents["main_memory"].peek(1)[0]]))
+    if "stress_test" in conf:
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["qpu1"].subcomponents["main_memory"].peek(0)[0]]))
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["qpu2"].subcomponents["main_memory"].peek(0)[0]]))
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["qpu3"].subcomponents["main_memory"].peek(0)[0]]))
+        print(ns.qubits.qubitapi.reduced_dm([network.network.nodes["qpu4"].subcomponents["main_memory"].peek(0)[0]]))
 
 
 if __name__ == "__main__":
@@ -66,8 +70,6 @@ if __name__ == "__main__":
 
 # TODO(sawii)
 '''
-- check ebits are not already entangled with others at this point
-- add yaml notation for multiple ebits in coupling map
 
 
 ##TO BE TALKED ABOUT IN THE THESIS REGARDLESS
