@@ -1,4 +1,4 @@
-# QuantumSimulationTool
+# A Software Tool For Mapping and Executing Distributed Quantum Computations on a Network Simulator
 
 Thesis project for the Bachelor in Computer, Electronics, and Telecommunications Engineering at UniPR. 
 
