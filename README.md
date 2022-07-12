@@ -2,6 +2,13 @@
 
 Thesis project for the Bachelor in Computer, Electronics, and Telecommunications Engineering at UniPR. 
 
+The configuration files can be provided when prompted by the Python Script. 
+Format: 
+- **Network Topology**: YAML
+- **Quantum Computation**: OpenQASM
+
+Examples can be found in the linked poster. 
+
 ## Abstract
 _In this work, we present a software tool denoted as DQC Executor,
 that accepts as input the description of the network and the code of the algorithm, and
